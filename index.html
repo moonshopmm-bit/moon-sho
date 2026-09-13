@@ -36,6 +36,9 @@
         
         label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: #64748b; margin-left: 4px; margin-bottom: 4px; display: block; }
     </style>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body class="bg-gradient-moon min-h-screen">
 
@@ -68,12 +71,10 @@
         </div>
     </section>
 
-    <!-- Modal Formulario de Compra / Estado -->
     <div id="buy-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden flex items-center justify-center z-[100] p-4 overflow-y-auto">
         <div class="bg-[#0b0f19] border border-white/10 w-full max-w-lg rounded-3xl p-6 md:p-8 relative my-auto shadow-2xl">
             <button onclick="closeModal()" class="absolute top-6 right-6 text-gray-400 hover:text-white transition text-xl font-bold">✕</button>
 
-            <!-- Encabezado de Pago -->
             <div class="text-center mb-6">
                 <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 p-2 shadow-lg">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Nequi_logo.svg/1200px-Nequi_logo.svg.png" alt="Nequi" class="max-h-full max-w-full object-contain">
@@ -86,11 +87,9 @@
                 </div>
             </div>
 
-            <!-- Formularios dinámicos -->
             <div id="my-form">
                 <h4 class="text-base font-bold text-white mb-4">Detalles del Envío</h4>
 
-                <!-- PASO 1: Formulario Inicial -->
                 <form id="orderForm" class="space-y-3" onsubmit="enviarDatosIniciales(event)">
                     <div>
                         <label>NOMBRE DE LA ARMA</label>
@@ -134,7 +133,6 @@
                     </button>
                 </form>
 
-                <!-- PASO 2: Esperando precio / Pago -->
                 <div id="step-precio" class="hidden space-y-4 text-center">
                     <div id="loading-precio" class="p-6 bg-blue-950/20 border border-blue-500/20 rounded-2xl">
                         <p class="text-sm font-bold text-blue-400 animate-pulse">🕒 Esperando a que el administrador establezca el precio...</p>
@@ -142,13 +140,13 @@
 
                     <div id="box-subir-comprobante" class="hidden space-y-4">
                         <div class="bg-blue-600/10 border border-blue-500/40 p-4 rounded-2xl">
-                            <p class="text-xs text-gray-400 uppercase font-bold">Monto Total Calculado:</p>
+                            <p class="text-xs text-gray-400 uppercase font-bold">Monto Total a Pagar:</p>
                             <p id="precio-display" class="text-3xl font-black text-blue-400 mt-1">$0 COP</p>
                         </div>
 
                         <div class="text-left">
                             <label>SUBIR COMPROBANTE DE PAGO</label>
-                            <input type="file" id="input-comprobante" accept="image/*,.pdf" class="input-field cursor-pointer">
+                            <input type="file" id="input-comprobante" accept="image/*" class="input-field cursor-pointer">
                         </div>
 
                         <button onclick="subirComprobante()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3.5 px-4 rounded-xl transition text-sm tracking-wider uppercase">
@@ -157,14 +155,13 @@
                     </div>
                 </div>
 
-                <!-- PASO 3: Esperando / Recibido Servidor Link -->
                 <div id="step-servidor" class="hidden space-y-4 text-center">
                     <div id="loading-servidor" class="p-6 bg-blue-950/20 border border-blue-500/20 rounded-2xl">
                         <p class="text-sm font-bold text-blue-400 animate-pulse">⏳ Comprobante enviado. Esperando link del servidor de Roblox...</p>
                     </div>
 
                     <div id="box-entrar-servidor" class="hidden space-y-4">
-                        <p class="text-sm text-green-400 font-bold">¡Tu pago ha sido verificado correctamente!</p>
+                        <p class="text-sm text-green-400 font-bold">¡Pago verificado!</p>
                         <a id="btn-entrar" href="#" target="_blank" class="block w-full bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold py-4 px-4 rounded-xl transition text-base uppercase shadow-lg">
                             🚀 ENTRAR AL SERVIDOR
                         </a>
@@ -174,11 +171,8 @@
         </div>
     </div>
 
-    <!-- Firebase SDK Modular -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
+    <script>
+        // Inicializar Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCScDrnMGvBQh8g7Z2yCkwtWqdVNu8fqJI",
             authDomain: "pepe-58c72.firebaseapp.com",
@@ -186,26 +180,19 @@
             projectId: "pepe-58c72",
             storageBucket: "pepe-58c72.firebasestorage.app",
             messagingSenderId: "964204938889",
-            appId: "1:964204938889:web:c0c1ef98e9396649e4a858",
-            measurementId: "G-5DR9LYPENZ"
+            appId: "1:964204938889:web:c0c1ef98e9396649e4a858"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
         let activeOrderId = null;
 
-        window.openModal = function() {
-            document.getElementById('buy-modal').classList.remove('hidden');
-        }
+        function openModal() { document.getElementById('buy-modal').classList.remove('hidden'); }
+        function closeModal() { document.getElementById('buy-modal').classList.add('hidden'); }
 
-        window.closeModal = function() {
-            document.getElementById('buy-modal').classList.add('hidden');
-        }
-
-        window.enviarDatosIniciales = function(event) {
-            event.preventDefault();
-
+        function enviarDatosIniciales(e) {
+            e.preventDefault();
             activeOrderId = 'ORD-' + Date.now();
 
             const orderData = {
@@ -223,28 +210,26 @@
                 serverLink: null
             };
 
-            set(ref(db, 'pedidos/' + activeOrderId), orderData);
-
-            document.getElementById('orderForm').classList.add('hidden');
-            document.getElementById('step-precio').classList.remove('hidden');
-
-            escucharEstadoPedido(activeOrderId);
+            db.ref('pedidos/' + activeOrderId).set(orderData)
+            .then(() => {
+                document.getElementById('orderForm').classList.add('hidden');
+                document.getElementById('step-precio').classList.remove('hidden');
+                escucharEstadoPedido(activeOrderId);
+            })
+            .catch(err => alert("Error al conectar con la base de datos: " + err.message));
         }
 
         function escucharEstadoPedido(orderId) {
-            const orderRef = ref(db, 'pedidos/' + orderId);
-            onValue(orderRef, (snapshot) => {
+            db.ref('pedidos/' + orderId).on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (!data) return;
 
-                // Si ya se asignó precio
                 if (data.precio && !data.comprobante) {
                     document.getElementById('loading-precio').classList.add('hidden');
                     document.getElementById('box-subir-comprobante').classList.remove('hidden');
                     document.getElementById('precio-display').innerText = '$' + Number(data.precio).toLocaleString('es-CO') + ' COP';
                 }
 
-                // Si ya se envió link del servidor
                 if (data.serverLink) {
                     document.getElementById('step-precio').classList.add('hidden');
                     document.getElementById('step-servidor').classList.remove('hidden');
@@ -255,25 +240,22 @@
             });
         }
 
-        window.subirComprobante = function() {
+        function subirComprobante() {
             const fileInput = document.getElementById('input-comprobante');
-            if (!fileInput.files[0]) {
-                alert('Por favor selecciona la imagen de tu comprobante');
-                return;
-            }
+            if (!fileInput.files[0]) return alert('Selecciona una imagen del comprobante.');
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                const base64Comprobante = e.target.result;
-                update(ref(db, 'pedidos/' + activeOrderId), {
-                    comprobante: base64Comprobante
+                db.ref('pedidos/' + activeOrderId).update({
+                    comprobante: e.target.result
+                }).then(() => {
+                    document.getElementById('step-precio').classList.add('hidden');
+                    document.getElementById('step-servidor').classList.remove('hidden');
                 });
-
-                document.getElementById('step-precio').classList.add('hidden');
-                document.getElementById('step-servidor').classList.remove('hidden');
             };
             reader.readAsDataURL(fileInput.files[0]);
         }
     </script>
 </body>
-</html>
+                    </html>
+                    
