@@ -12,6 +12,7 @@
         .input-admin { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 8px; color: white; outline: none; }
     </style>
 
+    <!-- Firebase Scripts Clásicos (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
@@ -46,6 +47,20 @@
         </div>
     </div>
 
+    <!-- Modal Emergente para Ver el Comprobante -->
+    <div id="modal-comprobante" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden flex items-center justify-center z-[100] p-4">
+        <div class="bg-[#0b0f19] border border-white/10 max-w-lg w-full rounded-3xl p-6 relative shadow-2xl text-center">
+            <button onclick="cerrarModalComprobante()" class="absolute top-4 right-4 text-gray-400 hover:text-white font-bold text-xl">✕</button>
+            <h3 class="text-lg font-bold mb-4 text-blue-400">Comprobante de Pago</h3>
+            <div class="max-h-[70vh] overflow-y-auto rounded-xl border border-white/10 p-2 bg-black/40">
+                <img id="img-comprobante-preview" src="" class="w-full object-contain rounded-lg">
+            </div>
+            <button onclick="cerrarModalComprobante()" class="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-xl text-xs uppercase">
+                Cerrar
+            </button>
+        </div>
+    </div>
+
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCScDrnMGvBQh8g7Z2yCkwtWqdVNu8fqJI",
@@ -60,9 +75,12 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        let pedidosData = {};
+
         // Escuchar cambios de la base de datos en vivo
         db.ref('pedidos').on('value', (snapshot) => {
             const data = snapshot.val();
+            pedidosData = data || {};
             const tbody = document.getElementById('tabla-pedidos');
             tbody.innerHTML = '';
 
@@ -100,7 +118,7 @@
                         </td>
                         <td class="p-3">
                             ${p.comprobante 
-                                ? `<a href="${p.comprobante}" target="_blank" class="bg-purple-600/30 text-purple-300 border border-purple-500/30 px-2 py-1 rounded text-[10px] font-bold">Ver Imagen</a>`
+                                ? `<button onclick="verComprobante('${p.id}')" class="bg-purple-600/30 text-purple-300 border border-purple-500/30 px-3 py-1 rounded-lg text-[10px] font-bold hover:bg-purple-600/50 transition">👁️ Ver Foto</button>`
                                 : `<span class="text-gray-500 italic">Pendiente...</span>`
                             }
                         </td>
@@ -123,6 +141,19 @@
                 `;
             });
         });
+
+        function verComprobante(id) {
+            const pedido = pedidosData[id];
+            if (pedido && pedido.comprobante) {
+                document.getElementById('img-comprobante-preview').src = pedido.comprobante;
+                document.getElementById('modal-comprobante').classList.remove('hidden');
+            }
+        }
+
+        function cerrarModalComprobante() {
+            document.getElementById('modal-comprobante').classList.add('hidden');
+            document.getElementById('img-comprobante-preview').src = '';
+        }
 
         function asignarPrecio(id) {
             const val = document.getElementById(`input-precio-${id}`).value;
