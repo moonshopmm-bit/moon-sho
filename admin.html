@@ -11,6 +11,9 @@
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .input-admin { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 8px; color: white; outline: none; }
     </style>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body class="p-4 md:p-8 min-h-screen">
 
@@ -18,7 +21,7 @@
         <div class="flex justify-between items-center glass p-6 rounded-3xl">
             <div>
                 <h1 class="text-2xl font-black text-blue-400">PANEL ADMINISTRADOR</h1>
-                <p class="text-xs text-gray-400">Gestión en tiempo real por Firebase</p>
+                <p class="text-xs text-gray-400">Conectado en tiempo real con la tienda</p>
             </div>
         </div>
 
@@ -33,20 +36,17 @@
                         <th class="p-3">Precio ($)</th>
                         <th class="p-3">Comprobante</th>
                         <th class="p-3">Enviar Servidor</th>
-                        <th class="p-3 text-center">Acciones</th>
+                        <th class="p-3 text-center">Acción</th>
                     </tr>
                 </thead>
                 <tbody id="tabla-pedidos" class="divide-y divide-white/5">
+                    <tr><td colspan="7" class="text-center p-6 text-gray-400 font-bold">Cargando pedidos...</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- Firebase SDK Modular -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
+    <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCScDrnMGvBQh8g7Z2yCkwtWqdVNu8fqJI",
             authDomain: "pepe-58c72.firebaseapp.com",
@@ -54,15 +54,14 @@
             projectId: "pepe-58c72",
             storageBucket: "pepe-58c72.firebasestorage.app",
             messagingSenderId: "964204938889",
-            appId: "1:964204938889:web:c0c1ef98e9396649e4a858",
-            measurementId: "G-5DR9LYPENZ"
+            appId: "1:964204938889:web:c0c1ef98e9396649e4a858"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
-        const pedidosRef = ref(db, 'pedidos');
-        onValue(pedidosRef, (snapshot) => {
+        // Escuchar cambios de la base de datos en vivo
+        db.ref('pedidos').on('value', (snapshot) => {
             const data = snapshot.val();
             const tbody = document.getElementById('tabla-pedidos');
             tbody.innerHTML = '';
@@ -114,7 +113,7 @@
                                         <button onclick="enviarLinkServidor('${p.id}')" class="bg-emerald-600 hover:bg-emerald-500 px-2 py-1 rounded text-[10px] font-bold">Enviar</button>
                                        </div>`
                                   )
-                                : `<span class="text-gray-600">Subir pago 1°</span>`
+                                : `<span class="text-gray-600">Esperando Pago...</span>`
                             }
                         </td>
                         <td class="p-3 text-center">
@@ -125,21 +124,21 @@
             });
         });
 
-        window.asignarPrecio = function(id) {
+        function asignarPrecio(id) {
             const val = document.getElementById(`input-precio-${id}`).value;
-            if(!val) return alert('Ingresa un precio válido');
-            update(ref(db, 'pedidos/' + id), { precio: val });
+            if(!val) return alert('Ingresa un precio válido.');
+            db.ref('pedidos/' + id).update({ precio: val });
         }
 
-        window.enviarLinkServidor = function(id) {
+        function enviarLinkServidor(id) {
             const link = document.getElementById(`input-link-${id}`).value;
-            if(!link) return alert('Ingresa el link del servidor privado');
-            update(ref(db, 'pedidos/' + id), { serverLink: link });
+            if(!link) return alert('Ingresa el link del servidor.');
+            db.ref('pedidos/' + id).update({ serverLink: link });
         }
 
-        window.borrarPedido = function(id) {
-            if(confirm('¿Seguro que deseas eliminar este pedido?')) {
-                remove(ref(db, 'pedidos/' + id));
+        function borrarPedido(id) {
+            if(confirm('¿Eliminar este pedido?')) {
+                db.ref('pedidos/' + id).remove();
             }
         }
     </script>
