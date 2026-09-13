@@ -37,7 +37,6 @@
         label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: #64748b; margin-left: 4px; margin-bottom: 4px; display: block; }
     </style>
 
-    <!-- Firebase Scripts Clásicos (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
@@ -48,7 +47,6 @@
         
         <div class="flex space-x-6 md:space-x-8 text-[11px] md:text-sm font-bold text-gray-300 uppercase tracking-widest">
             <a href="#" class="hover:text-blue-400 transition border-b-2 border-transparent hover:border-blue-400 pb-1">Inicio</a>
-            <a href="#mis-pedidos" class="hover:text-blue-400 transition border-b-2 border-transparent hover:border-blue-400 pb-1">Mis Pedidos</a>
             <a href="https://mail.google.com/mail/?view=cm&fs=1&to=moonshopmm@gmail.com&su=Soporte/Queja%20Moon%20Shop" target="_blank" class="hover:text-blue-400 transition border-b-2 border-transparent hover:border-blue-400 pb-1">Soporte</a>
         </div>
 
@@ -61,46 +59,27 @@
             <h2 class="text-4xl md:text-6xl font-extrabold leading-tight">Vender, Crecer y <br> <span class="text-blue-500">Liderar el Mercado</span></h2>
             <p class="text-gray-400 text-sm md:text-lg leading-relaxed max-w-lg mx-auto md:mx-0">En <b>Moon Shop</b>, nuestro propósito es convertirnos en la tienda más barata de MM2 en Colombia. Queremos que cada jugador crezca su inventario.</p>
             <div class="flex flex-wrap justify-center md:justify-start gap-4">
-                <button onclick="openModal('Harvester', 27000, 8)" class="bg-white text-black px-6 py-3 md:px-8 md:py-4 rounded-2xl font-bold hover:bg-blue-500 hover:text-white transition-all shadow-lg text-sm md:text-base">Comprar </button>
+                <button onclick="openModal()" class="bg-white text-black px-6 py-3 md:px-8 md:py-4 rounded-2xl font-bold hover:bg-blue-500 hover:text-white transition-all shadow-lg text-sm md:text-base">Comprar</button>
                 <div class="flex items-center gap-2 text-xs md:text-sm font-semibold text-blue-400"><span>●</span> Stock 2026</div>
             </div>
         </div>
         <div class="relative h-[280px] md:h-[400px] flex items-center justify-center mt-8 md:mt-0">
             <div class="absolute inset-0 bg-blue-500/10 blur-[80px] md:blur-[100px] rounded-full"></div>
-            <img src="https://static.wikia.nocookie.net/murder-mystery-2/images/b/b5/HarvesterImproved.png" class="w-48 h-48 md:w-64 md:h-64 object-contain animate-weapon z-20 cursor-pointer" onclick="openModal('Harvester', 27000, 8)">
-            <img src="https://static.wikia.nocookie.net/murder-mystery-2/images/e/eb/Icebreaker.png" class="w-32 h-32 md:w-48 md:h-48 object-contain animate-weapon-delay absolute top-0 right-4 md:right-10 z-10 opacity-30 md:opacity-50 cursor-pointer" onclick="openModal('Icebreaker', 20000, 5)">
-            <img src="https://static.wikia.nocookie.net/murder-mystery-2/images/1/1a/Updated_Candy.png" class="w-32 h-32 md:w-48 md:h-48 object-contain animate-weapon-delay absolute bottom-0 left-4 md:left-10 z-10 opacity-30 md:opacity-50 cursor-pointer" onclick="openModal('Candy', 15000, 10)">
+            <img src="https://static.wikia.nocookie.net/murder-mystery-2/images/b/b5/HarvesterImproved.png" class="w-48 h-48 md:w-64 md:h-64 object-contain animate-weapon z-20">
+            <img src="https://static.wikia.nocookie.net/murder-mystery-2/images/e/eb/Icebreaker.png" class="w-32 h-32 md:w-48 md:h-48 object-contain animate-weapon-delay absolute top-0 right-4 md:right-10 z-10 opacity-30 md:opacity-50">
+            <img src="https://static.wikia.nocookie.net/murder-mystery-2/images/1/1a/Updated_Candy.png" class="w-32 h-32 md:w-48 md:h-48 object-contain animate-weapon-delay absolute bottom-0 left-4 md:left-10 z-10 opacity-30 md:opacity-50">
         </div>
     </section>
 
-    <!-- SECCIÓN: HISTORIAL DE PEDIDOS DEL CLIENTE -->
-    <section id="mis-pedidos" class="max-w-7xl mx-auto px-6 pb-20">
-        <div class="glass p-6 md:p-8 rounded-3xl space-y-6">
-            <div class="flex flex-col md:flex-row justify-between md:items-center gap-2">
-                <div>
-                    <h3 class="text-2xl font-extrabold text-blue-400">Mis Pedidos Realizados</h3>
-                    <p class="text-xs text-gray-400">Sigue el estado de tu transacción en tiempo real desde este navegador.</p>
-                </div>
-            </div>
-
-            <div id="lista-mis-pedidos" class="space-y-4">
-                <p class="text-sm text-gray-500 italic">No has realizado ningún pedido aún desde este dispositivo.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Modal Formulario -->
     <div id="buy-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden flex items-center justify-center z-[100] p-4 overflow-y-auto">
         <div class="bg-[#0b0f19] border border-white/10 w-full max-w-lg rounded-3xl p-6 md:p-8 relative my-auto shadow-2xl">
             <button onclick="closeModal()" class="absolute top-6 right-6 text-gray-400 hover:text-white transition text-xl font-bold">✕</button>
 
-            <!-- Encabezado -->
             <div class="text-center mb-6">
-                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-3 p-2 shadow-lg">
+                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 p-2 shadow-lg">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Nequi_logo.svg/1200px-Nequi_logo.svg.png" alt="Nequi" class="max-h-full max-w-full object-contain">
                 </div>
                 <h3 class="text-xl font-bold text-white">Total a Pagar</h3>
-                <p id="item-title" class="text-blue-400 font-bold text-sm mt-1">Comprar</p>
                 
                 <div class="bg-blue-950/50 border border-blue-500/30 rounded-2xl p-3 mt-4">
                     <p class="text-[10px] text-blue-400 font-extrabold uppercase tracking-widest">NEQUI / CELULAR</p>
@@ -111,19 +90,15 @@
             <div id="my-form">
                 <h4 class="text-base font-bold text-white mb-4">Detalles del Envío</h4>
 
-                <!-- PASO 1: Formulario con Subtotal y Disponibilidad -->
-                <form id="orderForm" class="space-y-4" onsubmit="enviarDatosIniciales(event)">
-                    
-                    <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex justify-between items-center">
-                        <div class="w-1/2">
-                            <label>CANTIDAD:</label>
-                            <input type="number" id="cantidad" value="1" min="1" oninput="calcularSubtotal()" class="input-field w-20 text-center font-bold text-lg" required>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-[10px] font-bold text-blue-400 uppercase tracking-wider">DISPONIBLE: <span id="disp-count">8</span></p>
-                            <p class="text-[10px] text-gray-400 font-bold mt-1">SUBTOTAL</p>
-                            <p id="subtotal-display" class="text-xl font-black text-blue-400">$27.000</p>
-                        </div>
+                <form id="orderForm" class="space-y-3" onsubmit="enviarDatosIniciales(event)">
+                    <div>
+                        <label>NOMBRE DE LA ARMA</label>
+                        <input type="text" id="nombre-arma" placeholder="Ej: Harvester, Icebreaker..." class="input-field" required>
+                    </div>
+
+                    <div>
+                        <label>CANTIDAD</label>
+                        <input type="number" id="cantidad" value="1" min="1" class="input-field" required>
                     </div>
 
                     <div>
@@ -153,20 +128,19 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-extrabold py-4 px-4 rounded-xl transition text-sm tracking-wider uppercase mt-4">
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-extrabold py-3.5 px-4 rounded-xl transition text-sm tracking-wider uppercase mt-4">
                         ENVIAR PEDIDO AHORA
                     </button>
                 </form>
 
-                <!-- PASO 2: Esperando precio / Pago asignado por Admin -->
                 <div id="step-precio" class="hidden space-y-4 text-center">
                     <div id="loading-precio" class="p-6 bg-blue-950/20 border border-blue-500/20 rounded-2xl">
-                        <p class="text-sm font-bold text-blue-400 animate-pulse">🕒 Esperando a que el administrador confirme el precio...</p>
+                        <p class="text-sm font-bold text-blue-400 animate-pulse">🕒 Esperando a que el administrador establezca el precio...</p>
                     </div>
 
                     <div id="box-subir-comprobante" class="hidden space-y-4">
                         <div class="bg-blue-600/10 border border-blue-500/40 p-4 rounded-2xl">
-                            <p class="text-xs text-gray-400 uppercase font-bold">Monto Confirmado a Pagar:</p>
+                            <p class="text-xs text-gray-400 uppercase font-bold">Monto Total a Pagar:</p>
                             <p id="precio-display" class="text-3xl font-black text-blue-400 mt-1">$0 COP</p>
                         </div>
 
@@ -176,19 +150,18 @@
                         </div>
 
                         <button onclick="subirComprobante()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3.5 px-4 rounded-xl transition text-sm tracking-wider uppercase">
-                            ENVIAR COMPROBANTE DE PAGO
+                            ENVIAR COMPROBANTE
                         </button>
                     </div>
                 </div>
 
-                <!-- PASO 3: Esperando / Recibir Link del Servidor -->
                 <div id="step-servidor" class="hidden space-y-4 text-center">
                     <div id="loading-servidor" class="p-6 bg-blue-950/20 border border-blue-500/20 rounded-2xl">
                         <p class="text-sm font-bold text-blue-400 animate-pulse">⏳ Comprobante enviado. Esperando link del servidor de Roblox...</p>
                     </div>
 
                     <div id="box-entrar-servidor" class="hidden space-y-4">
-                        <p class="text-sm text-green-400 font-bold">¡Tu pago fue verificado!</p>
+                        <p class="text-sm text-green-400 font-bold">¡Pago verificado!</p>
                         <a id="btn-entrar" href="#" target="_blank" class="block w-full bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold py-4 px-4 rounded-xl transition text-base uppercase shadow-lg">
                             🚀 ENTRAR AL SERVIDOR
                         </a>
@@ -199,6 +172,7 @@
     </div>
 
     <script>
+        // Inicializar Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCScDrnMGvBQh8g7Z2yCkwtWqdVNu8fqJI",
             authDomain: "pepe-58c72.firebaseapp.com",
@@ -213,64 +187,19 @@
         const db = firebase.database();
 
         let activeOrderId = null;
-        let precioBaseUnitario = 27000;
-        let nombreArmaActual = "Harvester";
 
-        // Obtener pedidos guardados en este dispositivo
-        function getMisPedidosIDs() {
-            return JSON.parse(localStorage.getItem('moonshop_pedidos') || '[]');
-        }
-
-        function savePedidoID(id) {
-            const arr = getMisPedidosIDs();
-            if (!arr.includes(id)) {
-                arr.push(id);
-                localStorage.setItem('moonshop_pedidos', JSON.stringify(arr));
-            }
-        }
-
-        function openModal(nombre = "Harvester", precio = 27000, disponible = 8) {
-            nombreArmaActual = nombre;
-            precioBaseUnitario = precio;
-            document.getElementById('item-title').innerText = nombre;
-            document.getElementById('disp-count').innerText = disponible;
-            document.getElementById('cantidad').value = 1;
-            
-            // Restablecer vistas dentro del modal
-            document.getElementById('orderForm').classList.remove('hidden');
-            document.getElementById('step-precio').classList.add('hidden');
-            document.getElementById('step-servidor').classList.add('hidden');
-            document.getElementById('box-subir-comprobante').classList.add('hidden');
-            document.getElementById('loading-precio').classList.remove('hidden');
-            document.getElementById('box-entrar-servidor').classList.add('hidden');
-            document.getElementById('loading-servidor').classList.remove('hidden');
-
-            calcularSubtotal();
-            document.getElementById('buy-modal').classList.remove('hidden');
-        }
-
-        function closeModal() { 
-            document.getElementById('buy-modal').classList.add('hidden'); 
-        }
-
-        function calcularSubtotal() {
-            const cant = parseInt(document.getElementById('cantidad').value) || 1;
-            const subtotal = cant * precioBaseUnitario;
-            document.getElementById('subtotal-display').innerText = '$' + subtotal.toLocaleString('es-CO');
-        }
+        function openModal() { document.getElementById('buy-modal').classList.remove('hidden'); }
+        function closeModal() { document.getElementById('buy-modal').classList.add('hidden'); }
 
         function enviarDatosIniciales(e) {
             e.preventDefault();
             activeOrderId = 'ORD-' + Date.now();
-            const cant = parseInt(document.getElementById('cantidad').value) || 1;
-            const subtotal = cant * precioBaseUnitario;
 
             const orderData = {
                 id: activeOrderId,
                 fecha: new Date().toLocaleString('es-CO'),
-                arma: nombreArmaActual,
-                cantidad: cant,
-                subtotalSugerido: subtotal,
+                arma: document.getElementById('nombre-arma').value,
+                cantidad: document.getElementById('cantidad').value,
                 titular: document.getElementById('titular').value,
                 roblox: document.getElementById('roblox').value,
                 discord: document.getElementById('discord').value,
@@ -283,13 +212,11 @@
 
             db.ref('pedidos/' + activeOrderId).set(orderData)
             .then(() => {
-                savePedidoID(activeOrderId);
                 document.getElementById('orderForm').classList.add('hidden');
                 document.getElementById('step-precio').classList.remove('hidden');
                 escucharEstadoPedido(activeOrderId);
-                cargarMisPedidos();
             })
-            .catch(err => alert("Error: " + err.message));
+            .catch(err => alert("Error al conectar con la base de datos: " + err.message));
         }
 
         function escucharEstadoPedido(orderId) {
@@ -315,7 +242,7 @@
 
         function subirComprobante() {
             const fileInput = document.getElementById('input-comprobante');
-            if (!fileInput.files[0]) return alert('Por favor sube la imagen del comprobante.');
+            if (!fileInput.files[0]) return alert('Selecciona una imagen del comprobante.');
 
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -328,82 +255,6 @@
             };
             reader.readAsDataURL(fileInput.files[0]);
         }
-
-        // Cargar todos los pedidos realizados por el cliente
-        function cargarMisPedidos() {
-            const ids = getMisPedidosIDs();
-            const contenedor = document.getElementById('lista-mis-pedidos');
-
-            if (ids.length === 0) {
-                contenedor.innerHTML = `<p class="text-sm text-gray-500 italic">No has realizado ningún pedido aún desde este dispositivo.</p>`;
-                return;
-            }
-
-            contenedor.innerHTML = '';
-
-            ids.reverse().forEach(id => {
-                db.ref('pedidos/' + id).on('value', (snapshot) => {
-                    const p = snapshot.val();
-                    if (!p) return;
-
-                    let pasoPill = '';
-                    let progreso = 25;
-
-                    if (!p.precio) {
-                        pasoPill = `<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase">1. Revisando</span>`;
-                        progreso = 25;
-                    } else if (p.precio && !p.comprobante) {
-                        pasoPill = `<span class="bg-blue-500/20 text-blue-400 border border-blue-500/30 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase">2. Asignado / Pagar</span>`;
-                        progreso = 50;
-                    } else if (p.comprobante && !p.serverLink) {
-                        pasoPill = `<span class="bg-purple-500/20 text-purple-400 border border-purple-500/30 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase">3. Comprobante Enviado</span>`;
-                        progreso = 75;
-                    } else if (p.serverLink) {
-                        pasoPill = `<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase">4. Listo / Servidor</span>`;
-                        progreso = 100;
-                    }
-
-                    const cardHTML = `
-                        <div class="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-5 space-y-4">
-                            <div class="flex flex-col md:flex-row justify-between md:items-center gap-2">
-                                <div>
-                                    <span class="text-xs font-bold text-blue-400">${p.id}</span>
-                                    <h4 class="text-base font-bold text-white">${p.arma} (x${p.cantidad})</h4>
-                                    <p class="text-[11px] text-gray-400">${p.fecha}</p>
-                                </div>
-                                <div>${pasoPill}</div>
-                            </div>
-
-                            <div class="w-full bg-black/40 rounded-full h-2 overflow-hidden border border-white/5">
-                                <div class="bg-blue-500 h-full transition-all duration-500" style="width: ${progreso}%"></div>
-                            </div>
-
-                            <div class="flex flex-col md:flex-row justify-between items-center gap-3 pt-1">
-                                <div class="text-xs text-gray-300">
-                                    Precio: <b class="text-white">${p.precio ? '$' + Number(p.precio).toLocaleString('es-CO') + ' COP' : 'Pendiente por confirmar'}</b>
-                                </div>
-                                ${p.serverLink ? 
-                                    `<a href="${p.serverLink}" target="_blank" class="w-full md:w-auto text-center bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-xs px-5 py-2.5 rounded-xl uppercase transition">
-                                        🚀 ENTRAR AL SERVIDOR
-                                     </a>` : 
-                                    `<span class="text-[11px] text-gray-500 italic">El link se habilitará al verificar tu pago.</span>`
-                                }
-                            </div>
-                        </div>
-                    `;
-
-                    const elemExistente = document.getElementById('card-pedido-' + p.id);
-                    if (elemExistente) {
-                        elemExistente.outerHTML = `<div id="card-pedido-${p.id}">${cardHTML}</div>`;
-                    } else {
-                        contenedor.innerHTML += `<div id="card-pedido-${p.id}">${cardHTML}</div>`;
-                    }
-                });
-            });
-        }
-
-        // Cargar pedidos al entrar a la página
-        window.addEventListener('DOMContentLoaded', cargarMisPedidos);
     </script>
 </body>
 </html>
