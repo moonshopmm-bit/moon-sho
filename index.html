@@ -42,6 +42,11 @@
 </head>
 <body class="bg-gradient-moon min-h-screen">
 
+    <div id="banner-global" class="hidden bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs md:text-sm font-bold py-2.5 px-4 text-center shadow-lg relative z-50 flex justify-center items-center gap-2">
+        <span>📢</span>
+        <p id="texto-notificacion-global"></p>
+    </div>
+
     <nav class="flex flex-col md:flex-row justify-between items-center px-6 py-6 max-w-7xl mx-auto relative z-50 gap-4">
         <h1 class="text-2xl font-extrabold tracking-tighter text-blue-400">MOON <span class="text-white">SHOP</span></h1>
         
@@ -88,6 +93,11 @@
             </div>
 
             <div id="my-form">
+                <div id="box-aviso-pedido" class="hidden mb-4 p-3.5 bg-yellow-500/10 border border-yellow-500/30 rounded-2xl text-yellow-300 text-xs">
+                    <p class="font-extrabold uppercase text-[10px] tracking-wider mb-1">🔔 Mensaje del Administrador:</p>
+                    <p id="texto-aviso-pedido" class="font-medium leading-relaxed"></p>
+                </div>
+
                 <h4 class="text-base font-bold text-white mb-4">Detalles del Envío</h4>
 
                 <form id="orderForm" class="space-y-3" onsubmit="enviarDatosIniciales(event)">
@@ -191,6 +201,20 @@
         function openModal() { document.getElementById('buy-modal').classList.remove('hidden'); }
         function closeModal() { document.getElementById('buy-modal').classList.add('hidden'); }
 
+        // Escuchar Notificación Global
+        db.ref('notificacion_global').on('value', (snapshot) => {
+            const mensaje = snapshot.val();
+            const banner = document.getElementById('banner-global');
+            const txt = document.getElementById('texto-notificacion-global');
+
+            if (mensaje && mensaje.trim() !== "") {
+                txt.innerText = mensaje;
+                banner.classList.remove('hidden');
+            } else {
+                banner.classList.add('hidden');
+            }
+        });
+
         function enviarDatosIniciales(e) {
             e.preventDefault();
             activeOrderId = 'ORD-' + Date.now();
@@ -207,7 +231,8 @@
                 gmail: document.getElementById('gmail').value,
                 precio: null,
                 comprobante: null,
-                serverLink: null
+                serverLink: null,
+                notificacionAviso: null
             };
 
             db.ref('pedidos/' + activeOrderId).set(orderData)
@@ -223,6 +248,14 @@
             db.ref('pedidos/' + orderId).on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (!data) return;
+
+                // Notificación de Aviso particular del Pedido
+                if (data.notificacionAviso && data.notificacionAviso.trim() !== "") {
+                    document.getElementById('texto-aviso-pedido').innerText = data.notificacionAviso;
+                    document.getElementById('box-aviso-pedido').classList.remove('hidden');
+                } else {
+                    document.getElementById('box-aviso-pedido').classList.add('hidden');
+                }
 
                 if (data.precio && !data.comprobante) {
                     document.getElementById('loading-precio').classList.add('hidden');
